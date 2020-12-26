@@ -37,7 +37,7 @@ private:
 constexpr int MAX_RECURSION_DEPTH_CREATE = 300000;
 constexpr int MAX_RECURSION_DEPTH_SOLVE = 800000;
 constexpr int FIND_KNOWN_BLACK_FIELDS_RETRIES = 1000;
-constexpr int ENCODING_VERSION = 0;
+constexpr int ENCODING_VERSION = 1;
 
 void generate(std::vector<Field>& game, int generatorCount = 0, int numberGeneratorCount = 0);
 bool checkIfNumberIsAllowed(const int position, const int number, const std::vector<Field>& game);
@@ -47,8 +47,7 @@ void generateAdditionalKnownNumbers(std::vector<int>& additionalKnownNumbers, co
 
 double passedTime(const std::chrono::high_resolution_clock::time_point startTime);
 std::string gameToString(const std::vector<Field>& game);
-std::string gameToBinary(const std::vector<Field>& game, const std::vector<int>& reducedDifficulty = {});
-std::string gameToBase32(const std::vector<Field>& game, const std::vector<int>& reducedDifficulty = {});
+std::string encodeGame(const std::vector<Field>& game, const std::vector<int>& reducedDifficulty = {});
 
 Random mRandom;
 std::chrono::high_resolution_clock::time_point benchmarkTimeStart;

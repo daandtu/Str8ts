@@ -57,14 +57,16 @@ std::string gameToString(const std::vector<Field>& game)
 }
 
 /// <summary>
-/// Encode the game as a binary string
+/// Encode / encrypt a Str8ts game as a url base64url string
+/// (c.f. rfc464)
 /// </summary>
 /// <param name="game">Game field to be encoded</param>
 /// <param name="additionalKnownNumbers">Position of numbers which can be shown to the player to reduce the difficulty</param>
-/// <returns>The game as a binary string</returns>
-std::string gameToBinary(const std::vector<Field>& game, const std::vector<int>& additionalKnownNumbers)
+/// <returns>The game as a base64url encoded string including the encoding version number</returns>
+std::string encodeGame(const std::vector<Field>& game, const std::vector<int>& additionalKnownNumbers)
 {
-	std::string binary = "";
+	// Encode game as binary
+	std::string binary = std::bitset<8>(ENCODING_VERSION).to_string(); // Include encoding version number
 	for (int i = 0; i < 81; i++)
 	{
 		int black = (game[i].mode == BLACK || game[i].mode == BLACKKNOWN) ? 1 : 0;
@@ -73,31 +75,20 @@ std::string gameToBinary(const std::vector<Field>& game, const std::vector<int>&
 			binary += "000000";
 		else
 			binary += std::to_string(black) + std::to_string(known) + std::bitset<4>(game[i].number - 1LL).to_string();
-	} // The string now contains 81 * 6 = 486 bits
+	}
 	for (int i = 0; i < additionalKnownNumbers.size(); i++)
 	{
 		binary += std::bitset<7>(additionalKnownNumbers[i]).to_string();
-	} // The string now contains additional size(additionalKnownNumbers) * 7 bits
-	return binary;
-}
+	}
 
-/// <summary>
-/// Encode a Str8ts game as a base 32 string
-/// </summary>
-/// <param name="game">Game field to be encoded</param>
-/// <param name="additionalKnownNumbers">Position of numbers which can be shown to the player to reduce the difficulty</param>
-/// <returns>The game as a base 32 encoded string</returns>
-std::string gameToBase32(const std::vector<Field>& game, const std::vector<int>& additionalKnownNumbers)
-{
-	std::string binary = gameToBinary(game, additionalKnownNumbers);
-	char base[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"; // 32 characters used for the base32 encoding
+	// Encode binary data as base 64
+	char base[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"; // 64 characters used for the base64url encoding
 	std::string result = "";
-	result += base[ENCODING_VERSION];
-	for (int i = 0; i < binary.length() + 4; i += 5)
+	for (int i = 0; i < binary.length() + 5; i += 6)
 	{	
 		std::string bits;
-		bits = binary.substr(i, std::min<int>(5, binary.length() - i));
-		while (bits.length() < 5)
+		bits = binary.substr(i, std::min<int>(6, binary.length() - i));
+		while (bits.length() < 6)
 			bits += "0";
 		result += base[stoi(bits, nullptr, 2)];
 	}
@@ -456,6 +447,6 @@ int main()
 	debugPrint("FINAL GAME: (Time: " << passedTime(benchmarkTimeStart) << " seconds)" << std::endl << gameToString(game));
 	debugPrint("ENCODED GAME: ");
 
-	std::string base32 = gameToBase32(game, additionalKnownNumbers);
-	std::cout << base32 << std::endl;
+	std::string base64 = encodeGame(game, additionalKnownNumbers);
+	std::cout << base64 << std::endl;
 }
