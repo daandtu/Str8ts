@@ -11,14 +11,15 @@
 
 #define debugPrint(message) if (DEBUG) std::cout << message
 
-enum mode
+
+enum Mode
 {
 	USER, BLACK, KNOWN, BLACKKNOWN
 };
 
 struct Field
 {
-	mode mode;
+	Mode mode;
 	int number;
 };
 
@@ -49,5 +50,5 @@ std::string gameToString(const std::vector<Field>& game);
 std::string gameToBinary(const std::vector<Field>& game, const std::vector<int>& reducedDifficulty = {});
 std::string gameToBase32(const std::vector<Field>& game, const std::vector<int>& reducedDifficulty = {});
 
-Random random;
+Random mRandom;
 std::chrono::high_resolution_clock::time_point benchmarkTimeStart;

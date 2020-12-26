@@ -5,7 +5,6 @@
 #include <iterator>
 #include <string>
 
-
 Random::Random()
 {
 	mt = std::mt19937(rd());
@@ -97,7 +96,7 @@ std::string gameToBase32(const std::vector<Field>& game, const std::vector<int>&
 	for (int i = 0; i < binary.length() + 4; i += 5)
 	{	
 		std::string bits;
-		bits = binary.substr(i, std::min(5ULL, binary.length() - i));
+		bits = binary.substr(i, std::min<int>(5, binary.length() - i));
 		while (bits.length() < 5)
 			bits += "0";
 		result += base[stoi(bits, nullptr, 2)];
@@ -120,7 +119,7 @@ bool backtrackCreate(int step, std::vector<Field> &game, int & recursionDepth)
 	if (game[step].mode == BLACK)
 		return backtrackCreate(step + 1, game, recursionDepth);
 	std::vector<int> numbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-	random.shuffle(numbers.begin(), numbers.end());
+	mRandom.shuffle(numbers.begin(), numbers.end());
 	for (int i = 0; i < 9; i++) // Try all nine shuffled numbers on after another
 	{
 		if (checkIfNumberIsAllowed(step, numbers[i], game))
@@ -238,12 +237,12 @@ void generate(std::vector<Field> &game, int generatorCount, int numberGeneratorC
 	game.assign(81, Field());
 
 	// Generate black fields
-	int totalBlackFields = 19 + random.randInt(0, 3);
+	int totalBlackFields = 19 + mRandom.randInt(0, 3);
 	int count = 0;
-	bool symmetric = random.randInt(0, 1);
+	bool symmetric = mRandom.randInt(0, 1);
 	while (count < totalBlackFields)
 	{
-		int position = random.randInt(0, 80);
+		int position = mRandom.randInt(0, 80);
 		if (game[position].mode != BLACK)
 		{
 			game[position].mode = BLACK;
@@ -303,12 +302,12 @@ void generate(std::vector<Field> &game, int generatorCount, int numberGeneratorC
 
 	// Generate known black fields
 	int knownBlackFieldCount = 0;
-	int maxKnownBlackFields = 3 + random.randInt(0, 2);
+	int maxKnownBlackFields = 3 + mRandom.randInt(0, 2);
 	int findBlackFieldsRetries = 0;
 	while (knownBlackFieldCount < maxKnownBlackFields || findBlackFieldsRetries > FIND_KNOWN_BLACK_FIELDS_RETRIES) // Retry until enough black fields were found or max number of retries
 	{
 		findBlackFieldsRetries++;
-		int i = random.randInt(0, 80);
+		int i = mRandom.randInt(0, 80);
 		if (game[i].mode == BLACK)
 		{
 			int col = i % 9;
@@ -347,7 +346,7 @@ void generate(std::vector<Field> &game, int generatorCount, int numberGeneratorC
 	int recursionDepthSolve = 0;
 	while (solvable)
 	{
-		int i = random.randInt(0, 80);
+		int i = mRandom.randInt(0, 80);
 		bool wasNumberRemoved = false;
 		recursionDepthSolve = 0;
 		for (int j = 0; j < 81; j++)
@@ -426,7 +425,7 @@ void generateAdditionalKnownNumbers(std::vector<int>& additionalKnownNumbers, co
 	int countAdditionalNumbers = 0;
 	while (additionalKnownNumbers.size() < size)
 	{
-		int i = random.randInt(0, 80);
+		int i = mRandom.randInt(0, 80);
 		bool unknownValuesAvailable = false;
 		for (int j = 0; j < 81; j++)
 		{
@@ -458,5 +457,5 @@ int main()
 	debugPrint("ENCODED GAME: ");
 
 	std::string base32 = gameToBase32(game, additionalKnownNumbers);
-	std::cout << base32;
+	std::cout << base32 << std::endl;
 }
