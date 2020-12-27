@@ -44,7 +44,7 @@ void generate(std::vector<Field>& game, int generatorCount = 0, int numberGenera
 bool checkIfNumberIsAllowed(const int position, const int number, const std::vector<Field>& game);
 bool backtrackCreate(int step, std::vector<Field>& game, int& recursionDepth);
 int backtrackSolve(int step, std::vector<Field>& game, int& recursionDepth);
-void generateAdditionalKnownNumbers(std::vector<int>& additionalKnownNumbers, const std::vector<Field>& game, int size = 10);
+void generateAdditionalKnownNumbers(std::vector<int>& additionalKnownNumbers, const std::vector<Field>& game, int size = 20);
 
 double passedTime(const std::chrono::high_resolution_clock::time_point startTime);
 std::string gameToString(const std::vector<Field>& game);
