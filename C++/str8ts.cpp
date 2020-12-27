@@ -71,10 +71,7 @@ std::string encodeGame(const std::vector<Field>& game, const std::vector<int>& a
 	{
 		int black = (game[i].mode == BLACK || game[i].mode == BLACKKNOWN) ? 1 : 0;
 		int known = (game[i].mode == USER || game[i].mode == BLACK) ? 0 : 1;
-		if (game[i].number < 1 || game[i].number > 9)
-			binary += "000000";
-		else
-			binary += std::to_string(black) + std::to_string(known) + std::bitset<4>(game[i].number - 1LL).to_string();
+		binary += std::to_string(black) + std::to_string(known) + std::bitset<4>(game[i].number - 1LL).to_string();
 	}
 	for (int i = 0; i < additionalKnownNumbers.size(); i++)
 	{
