@@ -1,0 +1,178 @@
+div, span, td {
+  font-family: 'Open Sans', sans-serif;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+body, html {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+.wrapper {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.container {
+  border: 1px solid black;
+  margin: 25px;
+}
+.row {
+  margin: 0;
+  padding: 0;
+}
+.cell {
+  height: 41px;
+  width: 41px;
+  border: 1px solid black;
+  margin: 0;
+  padding: 2px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 22pt;
+}
+.controls {
+  margin: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.button {
+  height: 40px;
+  text-align: center;
+  font-size: 20pt;
+  border-radius: 10px;
+  background-color: #8fbc8f;
+}
+.num {
+  width: 80px;
+  font-weight: 600;
+}
+.set {
+  width: 123px;
+}
+.button:hover {
+  box-shadow: 2px 2px #cccccc;
+}
+.button:active {
+  background-color: #557055;
+}
+.line {
+  margin: 7px;
+  width: 254px;
+}
+.counter-text {
+  text-align: center;
+  color: #afafaf;
+  font-size: 10pt;
+}
+.mini {
+  text-align: center;
+  width: 40px;
+  font-size: 6pt;
+}
+.transparent {
+  color: rgba(0, 0, 0, 0);
+}
+.finished {
+  border: 15px solid #00cc00;
+}
+.dialogOuterContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+.dialogInnerContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.dialogBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  opacity: 0.2;
+}
+.dialog {
+  background-color: whitesmoke;
+  border-radius: 10px;
+  padding: 15px;
+  padding-bottom: 20px;;
+}
+.dialog-title {
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+.dialog-text {
+  padding-bottom: 20px;
+}
+.start-game-button {
+  background-color: #8fbc8f;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 5px;
+  font-weight: bold;
+}
+.dialog-share {
+  padding-bottom: 20px;
+}
+.difficulty {
+  padding-top: -10px;
+}
+.slider {
+}
+.dialog-text-input {
+  padding: 3px;
+  border-radius: 3px;
+}
+.copy-button {
+  background-color: #8fbc8f;
+  margin-left: 5px;
+  padding: 0 3px;
+  border-radius: 3px;
+}
+.loadingDialog {
+  padding: 40px 30px;
+  text-align: center;
+}
+.loading-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.loading-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 6px solid #8fbc8f;
+  border-color: #8fbc8f transparent #8fbc8f transparent;
+  animation: loading-ring 1.2s linear infinite;
+}
+@keyframes loading-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

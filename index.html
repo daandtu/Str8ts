@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="ISO-8859-1"> 
+<title>Str8ts</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"> 
+<link rel="stylesheet" type="text/css" href="./str8ts.css"/>
+</head>
+<body>
+  <div class="wrapper">
+    <table class="container" cellspacing="0"></table>
+    <div class="controls">
+      <table cellspacing="7">
+        <tr><td class="button num" id="bn1">1</td><td class="button num" id="bn2">2</td><td class="button num" id="bn3">3</td></tr>
+        <tr><td class="button num" id="bn4">4</td><td class="button num" id="bn5">5</td><td class="button num" id="bn6">6</td></tr>
+        <tr><td class="button num" id="bn7">7</td><td class="button num" id="bn8">8</td><td class="button num" id="bn9">9</td></tr>
+      </table>
+      <hr class="line">
+      <table cellspacing="7px">
+        <tr>
+          <td class="button set" id="new" onclick="loadNewGame()">Neu</td>
+          <td class="button set" id="empty" onclick="restart()">Leeren</td>
+        </tr>
+        <tr>
+          <td class="button set" id="back" onclick="back()">Zur&uuml;ck</td>
+          <td class="button set" id="delete" onclick="solution()">L&ouml;sung</td>
+        </tr>
+      </table>
+      <hr class="line">
+      <table cellspacing="7px">
+        <tr>
+          <td class="button set" id="notes" onclick="toggleNoteMode()">Notizen</td>
+          <td class="button set" id="check" onclick="check()">Pr&uuml;fen</td>
+        </tr>
+        <tr>
+          <td class="counter-text set" id="time">00:00</td>
+          <td class="counter-text set" id="counter">0</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="dialogOuterContainer">
+    <div class="dialogBackground"></div>
+    <div class="dialogInnerContainer">
+      <div class="dialog" id="welcome-dialog">
+        <div class="dialog-title">Neues Spiel</div>
+        <div class="dialog-text">Ein neues Spiel wurde geladen.</div>
+        <div class="dialog-share">
+          URL zum Teilen:
+          <br>
+          <input id="share-game-url" type="text" readonly="readonly" class="dialog-text-input" placeholder="Spiel URL">
+          <span class="copy-button" onclick="copyGameURL()">Kopieren</span>
+        </div>
+        <div class="dialog-share">
+          Schwierigkeit:
+          <span id="difficulty" class="difficulty">Mittel</span>
+          <br>
+          <span></span><input type="range" min="0" max="5" value="3" id="difficultySlider" class="slider" onchange="changeDifficulty()"></span>
+        </div>
+        <span class="start-game-button" onclick="startGame()">Spiel starten</span>
+        <span class="start-game-button" onclick="loadNewGame()">Neu generieren</span>
+      </div>
+      <div class="dialog loadingDialog" id="loading">
+        <div class="loading-ring"></div>
+        <div style="margin-top: 10px;">Neues Spiel wird generiert, bitte warten.</div>
+      </div>
+    </div>
+  </div>
+<script type="text/javascript" src="./str8ts.js"></script>
+</body>
+
+</html> 
