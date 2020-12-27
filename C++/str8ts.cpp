@@ -80,7 +80,7 @@ std::string encodeGame(const std::vector<Field>& game, const std::vector<int>& a
 
 	// Encode binary data as base 64
 	std::string result = "";
-	for (int i = 0; i < binary.length() + 5; i += 6)
+	for (int i = 0; i < binary.length(); i += 6)
 	{	
 		std::string bits;
 		bits = binary.substr(i, std::min<int>(6, binary.length() - i));
