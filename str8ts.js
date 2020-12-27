@@ -307,6 +307,7 @@ function startGame () {
     activeRow = undefined;
     count = 0;
     $('#counter').text(count);
+    $(".container").removeClass('finished');
     dialogVisibility(false, false);
     if (game) {
       game.forEach(field => {
