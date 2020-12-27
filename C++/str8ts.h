@@ -38,6 +38,7 @@ constexpr int MAX_RECURSION_DEPTH_CREATE = 300000;
 constexpr int MAX_RECURSION_DEPTH_SOLVE = 800000;
 constexpr int FIND_KNOWN_BLACK_FIELDS_RETRIES = 1000;
 constexpr int ENCODING_VERSION = 1;
+constexpr char BASE[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"; // 64 characters used for the base64url encoding
 
 void generate(std::vector<Field>& game, int generatorCount = 0, int numberGeneratorCount = 0);
 bool checkIfNumberIsAllowed(const int position, const int number, const std::vector<Field>& game);

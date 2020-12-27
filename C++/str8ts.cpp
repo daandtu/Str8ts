@@ -79,7 +79,6 @@ std::string encodeGame(const std::vector<Field>& game, const std::vector<int>& a
 	}
 
 	// Encode binary data as base 64
-	char base[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"; // 64 characters used for the base64url encoding
 	std::string result = "";
 	for (int i = 0; i < binary.length() + 5; i += 6)
 	{	
@@ -87,7 +86,7 @@ std::string encodeGame(const std::vector<Field>& game, const std::vector<int>& a
 		bits = binary.substr(i, std::min<int>(6, binary.length() - i));
 		while (bits.length() < 6)
 			bits += "0";
-		result += base[stoi(bits, nullptr, 2)];
+		result += BASE[stoi(bits, nullptr, 2)];
 	}
 	return result;
 }
