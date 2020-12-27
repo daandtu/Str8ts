@@ -14,7 +14,7 @@
 
 enum Mode
 {
-	USER, BLACK, KNOWN, BLACKKNOWN
+	USER, KNOWN, BLACK, BLACKKNOWN
 };
 
 struct Field
