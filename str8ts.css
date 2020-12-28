@@ -107,9 +107,7 @@ body, html {
   align-items: center;
 }
 .dialogBackground {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
   min-width: 100vw;
   min-height: 100vh;
   background-color: black;
