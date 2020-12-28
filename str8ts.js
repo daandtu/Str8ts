@@ -239,7 +239,6 @@ function parseGame (code) {
       let counter = 0;
       while (binary.length >= 7 && counter < difficulty * 3.5) {
         const position = parseInt(binary.substring(0, 7), 2);
-        console.log(Math.floor(position / 9), position % 9);
         game.get(Math.floor(position / 9), position % 9).mode = modes.KNOWN;
         game.get(Math.floor(position / 9), position % 9).render();
         binary = binary.substring(7);
