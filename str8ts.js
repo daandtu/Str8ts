@@ -339,6 +339,7 @@ function dialogVisibility (visible, loading) {
 
 $(document).ready(function(){
   setup();
+  onResize();
   const code = getURLParameter('code');
   if (code && code.length > 82) {
     gameUrl = window.location.href;
@@ -380,3 +381,14 @@ $(document).ready(function(){
     }
   })
 })
+
+$(window).resize(onResize);
+function onResize() {
+  if (window.innerWidth/2 < $('.controls').position().left) { // Large screen
+    $('#buttons-small').hide();
+    $('#buttons-large').show();
+  } else { // Small screen
+    $('#buttons-small').show();
+    $('#buttons-large').hide();
+  }
+}

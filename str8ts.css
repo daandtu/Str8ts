@@ -55,6 +55,11 @@ body, html {
   width: 80px;
   font-weight: 600;
 }
+.num-small {
+  width: 35px;
+  height: 35px;
+  font-weight: 500;
+}
 .set {
   width: 123px;
 }
