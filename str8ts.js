@@ -384,11 +384,15 @@ $(document).ready(function(){
 
 $(window).resize(onResize);
 function onResize() {
-  if (window.innerWidth/2 < $('.controls').position().left) { // Large screen
+  if (window.innerWidth/2 - 45 < $('.controls').position().left) { // Large screen
     $('#buttons-small').hide();
     $('#buttons-large').show();
+    $('.cell').css({ 'font-size': '22pt', 'width': '41px', 'height': '41px' });
+    $('.mini').css('font-size', '9pt');
   } else { // Small screen
     $('#buttons-small').show();
     $('#buttons-large').hide();
+    $('.cell').css({ 'font-size': '17pt', 'width': '30px', 'height': '30px' });
+    $('.mini').css('font-size', '5pt');
   }
 }
