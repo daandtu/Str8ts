@@ -7,7 +7,7 @@ const colors = {
   WHITE: '#ffffff', BLACK: '#000000',
   FIELDSELECTED: '#cfe2cf', FIELDUNSELECTED: '#ffffff'
 };
-const difficulties = ["Ultra", "Sehr schwer", "Schwer", "Mittel", "Leicht", "Sehr leicht"];
+const difficulties = ['Ultra', 'Sehr schwer', 'Schwer', 'Mittel', 'Leicht', 'Sehr leicht'];
 
 // Variables
 var starttime;
@@ -275,7 +275,7 @@ function loadNewGame () {
   clearInterval(timer);
   $.get('https://luiswalter.me/str8ts/getGame', data => {
     if (data.length > 82) {
-      console.log("Game:", data);
+      console.log('Game:', data);
       gameUrl = window.location.href.split('?')[0] + '?code=' + data
       gameCode = data;
       dialogVisibility(true, false);
@@ -306,7 +306,7 @@ function startGame () {
     activeRow = undefined;
     count = 0;
     $('#counter').text(count);
-    $(".container").removeClass('finished');
+    $('.container').removeClass('finished');
     dialogVisibility(false, false);
     if (game) {
       game.forEach(field => {
@@ -374,7 +374,7 @@ $(document).ready(function(){
         })
         if (finished) {
           showSolution = true;
-          $(".container").addClass('finished');
+          $('.container').addClass('finished');
           clearInterval(timer);
         } 
       }
