@@ -182,11 +182,9 @@ class Game {
 // Button Functions
 function restart () {
   showDialog(false);
-  if (!showSolution) {
-    game.forEach(field => {
-      field.restart();
-    })
-  }
+  game.forEach(field => {
+    field.restart();
+  })
 }
 function toggleNoteMode () {
   noteMode = !noteMode;
@@ -194,13 +192,11 @@ function toggleNoteMode () {
   $('#notes').css('background-color', color);
 }
 function check() {
-  if (!showSolution) {
-    count++;
-    $('#counter').text(count);
-    game.forEach(field => {
-      field.checkUser(setColor = true);
-    })
-  }
+  count++;
+  $('#counter').text(count);
+  game.forEach(field => {
+    field.checkUser(setColor = true);
+  })
 }
 function solution () {
   showDialog(false);
@@ -353,10 +349,18 @@ function showDialog (dialog) {
         window.history.replaceState(null, 'Str8ts', gameUrl);
         break;
       case dialogs.SOLUTION:
-        $('#solution-dialog').show();
+        if (!showSolution) {
+          $('#solution-dialog').show();
+        } else {
+          $('.dialogOuterContainer').hide();
+        }
         break;
       case dialogs.EMPTY:
-        $('#empty-dialog').show();
+        if (!showSolution) {
+          $('#empty-dialog').show();
+        } else {
+          $('.dialogOuterContainer').hide();
+        }
         break;
     }
   } else {
