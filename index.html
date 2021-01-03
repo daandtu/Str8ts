@@ -39,11 +39,11 @@
       <table cellspacing="7px">
         <tr>
           <td class="button set" id="new" onclick="loadNewGameAgain()">Neu</td>
-          <td class="button set" id="empty" onclick="restart()">Leeren</td>
+          <td class="button set" id="empty" onclick="showDialog(dialogs.EMPTY)">Leeren</td>
         </tr>
         <tr>
           <td class="button set" id="back" onclick="back()">Zur&uuml;ck</td>
-          <td class="button set" id="delete" onclick="solution()">L&ouml;sung</td>
+          <td class="button set" id="delete" onclick="showDialog(dialogs.SOLUTION)">L&ouml;sung</td>
         </tr>
       </table>
     </div>
@@ -60,7 +60,7 @@
           <input type="range" min="1" max="5" value="3" id="difficultySlider" class="slider" autocomplete="off" oninput="changeDifficulty()">
         </div>
         <span class="start-game-button" onclick="loadNewGame()">Neu generieren</span>
-        <span class="start-game-button" id="cancelNewGame" onclick="cancelNewGame()" style="display: none;">Abbrechen</span>
+        <span class="start-game-button" id="cancelNewGame" onclick="showDialog(false)" style="display: none;">Abbrechen</span>
       </div>
       <div class="dialog" id="start-dialog">
         <div class="dialog-title">Neues Str8ts-Spiel</div>
@@ -72,6 +72,18 @@
           <span class="copy-button" onclick="copyGameURL()">Kopieren</span>
         </div>
         <span class="start-game-button" onclick="startGame()">Spiel starten</span>
+      </div>
+      <div class="dialog" id="solution-dialog">
+        <div class="dialog-title">L&ouml;sung anzeigen</div>
+        <div class="dialog-text">Soll die komplette L&ouml;sung angezeigt werden?</div>
+        <span class="start-game-button" onclick="solution()">Anzeigen</span>
+        <span class="start-game-button" onclick="showDialog(false)">Abbrechen</span>
+      </div>
+      <div class="dialog" id="empty-dialog">
+        <div class="dialog-title">Eingetragene Zahlen l&ouml;schen</div>
+        <div class="dialog-text">Sollen alle eingetragenen Zahlen und Notizen gel&ouml;scht werden?</div>
+        <span class="start-game-button" onclick="restart()">Leeren</span>
+        <span class="start-game-button" onclick="showDialog(false)">Abbrechen</span>
       </div>
       <div class="dialog loading-dialog" id="loading-dialog">
         <div class="loading-ring"></div>

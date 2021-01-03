@@ -8,7 +8,7 @@ const colors = {
   FIELDSELECTED: '#cfe2cf', FIELDUNSELECTED: '#ffffff'
 };
 const difficulties = ['Ultra', 'Sehr schwer', 'Schwer', 'Mittel', 'Leicht', 'Sehr leicht'];
-const dialogs = { WELCOME: 1, GENERATED: 2, LOADING: 3 };
+const dialogs = { WELCOME: 1, GENERATED: 2, LOADING: 3, SOLUTION: 4, EMPTY: 5 };
 
 // Variables
 var starttime;
@@ -181,6 +181,7 @@ class Game {
 
 // Button Functions
 function restart () {
+  showDialog(false);
   if (!showSolution) {
     game.forEach(field => {
       field.restart();
@@ -202,6 +203,7 @@ function check() {
   }
 }
 function solution () {
+  showDialog(false);
   showSolution = true;
   clearInterval(timer);
   game.forEach(field => {
@@ -330,13 +332,12 @@ function loadNewGameAgain () {
   showDialog(dialogs.WELCOME);
   $('#cancelNewGame').show();
 }
-function cancelNewGame () {
-  showDialog(false);
-}
 function showDialog (dialog) {
   $('#welcome-dialog').hide();
   $('#start-dialog').hide();
   $('#loading-dialog').hide();
+  $('#solution-dialog').hide();
+  $('#empty-dialog').hide();
   if (dialog) {
     $('.dialogOuterContainer').show();
     switch(dialog) {
@@ -350,6 +351,13 @@ function showDialog (dialog) {
         $('#start-dialog').show();
         $('#share-game-url').val(gameUrl);
         window.history.replaceState(null, 'Str8ts', gameUrl);
+        break;
+      case dialogs.SOLUTION:
+        $('#solution-dialog').show();
+        break;
+      case dialogs.EMPTY:
+        $('#empty-dialog').show();
+        break;
     }
   } else {
     $('.dialogOuterContainer').hide();
