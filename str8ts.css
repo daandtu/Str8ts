@@ -121,7 +121,8 @@ body, html {
   background-color: whitesmoke;
   border-radius: 10px;
   padding: 15px;
-  padding-bottom: 20px;;
+  padding-bottom: 20px;
+  width: 235px;
 }
 .dialog-title {
   font-weight: bold;
@@ -144,6 +145,11 @@ body, html {
 .difficulty {
   padding-top: -10px;
 }
+.slider {
+  width: 220px;
+  margin-top: 5px;
+  padding-top: 2px;
+}
 .dialog-text-input {
   padding: 3px;
   border-radius: 3px;
@@ -154,8 +160,7 @@ body, html {
   padding: 0 3px;
   border-radius: 3px;
 }
-.loadingDialog {
-  padding: 40px 30px;
+.loading-dialog {
   text-align: center;
 }
 .loading-ring {

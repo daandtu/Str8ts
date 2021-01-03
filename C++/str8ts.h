@@ -36,19 +36,19 @@ private:
 
 constexpr int MAX_RECURSION_DEPTH_CREATE = 300000;
 constexpr int MAX_RECURSION_DEPTH_SOLVE = 800000;
-constexpr int FIND_KNOWN_BLACK_FIELDS_RETRIES = 1000;
-constexpr int ENCODING_VERSION = 1;
+constexpr int FIND_KNOWN_BLACK_FIELDS_RETRIES = 2000;
+constexpr int ENCODING_VERSION = 2;
+constexpr int DEFAULT_DIFFICULTY = 3;
 constexpr char BASE[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"; // 64 characters used for the base64url encoding
 
-void generate(std::vector<Field>& game, int generatorCount = 0, int numberGeneratorCount = 0);
+void generate(std::vector<Field>& game, int difficulty, int generatorCount = 0, int numberGeneratorCount = 0);
 bool checkIfNumberIsAllowed(const int position, const int number, const std::vector<Field>& game);
 bool backtrackCreate(int step, std::vector<Field>& game, int& recursionDepth);
 int backtrackSolve(int step, std::vector<Field>& game, int& recursionDepth);
-void generateAdditionalKnownNumbers(std::vector<int>& additionalKnownNumbers, const std::vector<Field>& game, int size = 20);
 
 double passedTime(const std::chrono::high_resolution_clock::time_point startTime);
 std::string gameToString(const std::vector<Field>& game);
-std::string encodeGame(const std::vector<Field>& game, const std::vector<int>& reducedDifficulty = {});
+std::string encodeGame(const std::vector<Field>& game);
 
 Random mRandom;
 std::chrono::high_resolution_clock::time_point benchmarkTimeStart;

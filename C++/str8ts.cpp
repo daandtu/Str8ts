@@ -61,9 +61,8 @@ std::string gameToString(const std::vector<Field>& game)
 /// (c.f. rfc464)
 /// </summary>
 /// <param name="game">Game field to be encoded</param>
-/// <param name="additionalKnownNumbers">Position of numbers which can be shown to the player to reduce the difficulty</param>
 /// <returns>The game as a base64url encoded string including the encoding version number</returns>
-std::string encodeGame(const std::vector<Field>& game, const std::vector<int>& additionalKnownNumbers)
+std::string encodeGame(const std::vector<Field>& game)
 {
 	// Encode game as binary
 	std::string binary = std::bitset<8>(ENCODING_VERSION).to_string(); // Include encoding version number
@@ -72,10 +71,6 @@ std::string encodeGame(const std::vector<Field>& game, const std::vector<int>& a
 		int black = (game[i].mode == BLACK || game[i].mode == BLACKKNOWN) ? 1 : 0;
 		int known = (game[i].mode == USER || game[i].mode == BLACK) ? 0 : 1;
 		binary += std::to_string(black) + std::to_string(known) + std::bitset<4>(game[i].number - 1LL).to_string();
-	}
-	for (int i = 0; i < additionalKnownNumbers.size(); i++)
-	{
-		binary += std::bitset<7>(additionalKnownNumbers[i]).to_string();
 	}
 
 	// Encode binary data as base 64
@@ -213,9 +208,10 @@ bool checkIfNumberIsAllowed(const int position, const int number, const std::vec
 /// Generate a new Str8ts game
 /// </summary>
 /// <param name="game">Field where the new game is stored</param>
+/// <param name="difficulty">Difficulty level as integer between 0 and 5, i.e. there exist 6 levels where 0 is the most difficult</param>
 /// <param name="generatorCount">Number of previous retries to generate the black game fields</param>
 /// <param name="numberGeneratorCount">Number of previous retries to generate all numbers</param>
-void generate(std::vector<Field> &game, int generatorCount, int numberGeneratorCount)
+void generate(std::vector<Field> &game, int difficulty, int generatorCount, int numberGeneratorCount)
 {
 	//Increase number of retries to generate a new game
 	generatorCount++;
@@ -224,7 +220,7 @@ void generate(std::vector<Field> &game, int generatorCount, int numberGeneratorC
 	game.assign(81, Field());
 
 	// Generate black fields
-	int totalBlackFields = 19 + mRandom.randInt(0, 3);
+	int totalBlackFields = 20 + mRandom.randInt(0, 3 + difficulty);
 	int count = 0;
 	bool symmetric = mRandom.randInt(0, 1);
 	while (count < totalBlackFields)
@@ -254,6 +250,7 @@ void generate(std::vector<Field> &game, int generatorCount, int numberGeneratorC
 			int horizontalNeighbors = 0;
 			int verticalNeighbors = 0;
 			int secondOrderNeighbors = 0;
+			int boarder = (row == 0 || col == 0 || row == 8 || col == 8) ? 1 : 0;
 			if (row > 0 && game[(row - 1LL) * 9 + col].mode == BLACK)
 				horizontalNeighbors++;
 			if (row < 8 && game[(row + 1LL) * 9 + col].mode == BLACK)
@@ -274,22 +271,22 @@ void generate(std::vector<Field> &game, int generatorCount, int numberGeneratorC
 				singleFieldsRow++;
 			if (verticalNeighbors > 1)
 				singleFieldsColumn++;
-			if (horizontalNeighbors + verticalNeighbors + secondOrderNeighbors > 3) // Restart game generation because of too many black fields
-				return generate(game, generatorCount);
+			if (horizontalNeighbors + verticalNeighbors + secondOrderNeighbors + boarder > 3) // Restart game generation because of too many black fields
+				return generate(game, difficulty, generatorCount);
 		}
 		if (singleFieldsColumn > 1 || singleFieldsRow > 1)
-			return generate(game, generatorCount);
+			return generate(game, difficulty, generatorCount);
 	}
 
 	// Generate numbers 
 	int recursionDepthCreate = 0;
 	if (!backtrackCreate(0, game, recursionDepthCreate)) // If algorithm fails restart game generation (with increased numberGeneratorCount)
-		return generate(game, generatorCount, numberGeneratorCount + 1);
+		return generate(game, difficulty, generatorCount, numberGeneratorCount + 1);
 	debugPrint("BACKTRACKING CREATOR: Field retries: " << generatorCount << ", Number retries: " << numberGeneratorCount  << ", Depth: " << recursionDepthCreate << " (Time: " << passedTime(benchmarkTimeStart) << " seconds)" << std::endl);
 
 	// Generate known black fields
 	int knownBlackFieldCount = 0;
-	int maxKnownBlackFields = 3 + mRandom.randInt(0, 2);
+	int maxKnownBlackFields = 4 + mRandom.randInt(0, 3);
 	int findBlackFieldsRetries = 0;
 	while (knownBlackFieldCount < maxKnownBlackFields || findBlackFieldsRetries > FIND_KNOWN_BLACK_FIELDS_RETRIES) // Retry until enough black fields were found or max number of retries
 	{
@@ -327,11 +324,12 @@ void generate(std::vector<Field> &game, int generatorCount, int numberGeneratorC
 	debugPrint(gameToString(game));
 	
 	// Remove numbers to generate user input fields
+	int numbersToRemove = std::min<int>(50, 81 - totalBlackFields - (difficulty + 2) * 3);
 	bool solvable = true;
 	int countRemovedNumbers = 0;
 	std::vector<Field> reducedGame(game);
 	int recursionDepthSolve = 0;
-	while (solvable)
+	while (countRemovedNumbers < numbersToRemove)
 	{
 		int i = mRandom.randInt(0, 80);
 		bool wasNumberRemoved = false;
@@ -359,9 +357,10 @@ void generate(std::vector<Field> &game, int generatorCount, int numberGeneratorC
 		if (!wasNumberRemoved)
 		{
 			debugPrint(std::endl);
-			solvable = false;
+			generate(game, difficulty, generatorCount);
 		}
 	}
+	debugPrint(std::endl);
 	for (int i = 0; i < 81; i++)
 	{
 		if (reducedGame[i].mode == USER && reducedGame[i].number > 0)
@@ -400,49 +399,19 @@ int backtrackSolve(int step, std::vector<Field> &game, int &recursionDepth)
 	return solutionCount;
 }
 
-/// <summary>
-/// Generate additional known numbers based on a given game field that can be shown to the user to reduce difficulty
-/// </summary>
-/// <param name="additionalKnownNumbers">Vector where the additional numbers are stored</param>
-/// <param name="game">Game for which the additional numbers are generated</param>
-/// <param name="game">Number of additional numbers to generate</param>
-void generateAdditionalKnownNumbers(std::vector<int>& additionalKnownNumbers, const std::vector<Field>& game, int size)
+int main(int argc, char* argv[])
 {
-	additionalKnownNumbers.reserve(size);
-	int countAdditionalNumbers = 0;
-	while (additionalKnownNumbers.size() < size)
-	{
-		int i = mRandom.randInt(0, 80);
-		bool unknownValuesAvailable = false;
-		for (int j = 0; j < 81; j++)
-		{
-			if (game[(i + j) % 81].mode == USER)
-			{
-				countAdditionalNumbers++;
-				additionalKnownNumbers.push_back((i + j) % 81);
-				unknownValuesAvailable = true;
-				break;
-			}
-		}
-		if (!unknownValuesAvailable)
-		{
-			debugPrint("WARNING: There are probably too less USER values");
-			break;
-		}
-	}
-}
-
-int main()
-{
+	int difficulty = DEFAULT_DIFFICULTY;
+	if (argc > 1)
+		difficulty = std::stoi(argv[1]);
+	
 	std::vector<Field> game;
 	benchmarkTimeStart = std::chrono::high_resolution_clock::now();
-	generate(game);
-	std::vector<int> additionalKnownNumbers;
-	generateAdditionalKnownNumbers(additionalKnownNumbers, game);
+	generate(game, difficulty);
 
 	debugPrint("FINAL GAME: (Time: " << passedTime(benchmarkTimeStart) << " seconds)" << std::endl << gameToString(game));
 	debugPrint("ENCODED GAME: ");
 
-	std::string base64 = encodeGame(game, additionalKnownNumbers);
+	std::string base64 = encodeGame(game);
 	std::cout << base64 << std::endl;
 }

@@ -8,6 +8,7 @@ const colors = {
   FIELDSELECTED: '#cfe2cf', FIELDUNSELECTED: '#ffffff'
 };
 const difficulties = ['Ultra', 'Sehr schwer', 'Schwer', 'Mittel', 'Leicht', 'Sehr leicht'];
+const dialogs = { WELCOME: 1, GENERATED: 2, LOADING: 3 };
 
 // Variables
 var starttime;
@@ -227,7 +228,7 @@ function parseGame (code) {
   const encodingVersion = parseInt(binary.substring(0, 8), 2);
   binary = binary.substring(8);
   switch (encodingVersion) {
-    default:
+    case 1:
       if (binary.length < (6 * 81)) return; // Invalid data
       for (let i = 0; i < 81; i++) {
         const subBinary = binary.substring(i * 6, (i + 1) * 6);
@@ -243,6 +244,15 @@ function parseGame (code) {
         game.get(Math.floor(position / 9), position % 9).render();
         binary = binary.substring(7);
         counter++;
+      }
+      break;
+    default:
+      if (binary.length < (6 * 81) || binary.length > (6 * 81 + 8)) return; // Invalid data
+      for (let i = 0; i < 81; i++) {
+        const subBinary = binary.substring(i * 6, (i + 1) * 6);
+        const mode = parseInt(subBinary.substring(0, 2), 2);
+        const value = parseInt(subBinary.substring(2, 6), 2) + 1;
+        game.setValues(Math.floor(i / 9), i % 9, mode, value);
       }
   }
 }
@@ -271,33 +281,30 @@ function getURLParameter (name) {
   return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
 }
 function loadNewGame () {
-  dialogVisibility(true, true);
+  showDialog(dialogs.LOADING);
   clearInterval(timer);
-  $.get('https://luiswalter.me/str8ts/getGame', data => {
+  $.get(`https://luiswalter.me/str8ts/getGame?difficulty=${difficulty}`, data => {
     if (data.length > 82) {
       console.log('Game:', data);
       gameUrl = window.location.href.split('?')[0] + '?code=' + data
       gameCode = data;
-      dialogVisibility(true, false);
+      showDialog(dialogs.GENERATED);
     } else {
       console.log(data);
       loadNewGame();
     }
   })
 }
-
 function changeDifficulty () {
   difficulty = Number($('#difficultySlider').val());
   $('#difficulty').text(difficulties[difficulty]);
 }
-
 function copyGameURL () {
   $('#share-game-url').val(gameUrl);
   $('#share-game-url').focus();
   $('#share-game-url').select();
   document.execCommand('copy');
 }
-
 function startGame () {
   if (gameCode && gameCode.length > 82) {
     showSolution = false;
@@ -307,7 +314,7 @@ function startGame () {
     count = 0;
     $('#counter').text(count);
     $('.container').removeClass('finished');
-    dialogVisibility(false, false);
+    showDialog(false);
     if (game) {
       game.forEach(field => {
         field.reset();
@@ -319,18 +326,30 @@ function startGame () {
     loadNewGame();
   }
 }
-
-function dialogVisibility (visible, loading) {
-  if (visible) {
+function loadNewGameAgain () {
+  showDialog(dialogs.WELCOME);
+  $('#cancelNewGame').show();
+}
+function cancelNewGame () {
+  showDialog(false);
+}
+function showDialog (dialog) {
+  $('#welcome-dialog').hide();
+  $('#start-dialog').hide();
+  $('#loading-dialog').hide();
+  if (dialog) {
     $('.dialogOuterContainer').show();
-    if (loading) {
-      $('#welcome-dialog').hide();
-      $('#loading').show();
-    } else {
-      $('#welcome-dialog').show();
-      $('#loading').hide();
-      $('#share-game-url').val(gameUrl);
-      window.history.replaceState(null, 'Str8ts', gameUrl);
+    switch(dialog) {
+      case dialogs.LOADING:
+        $('#loading-dialog').show();
+        break;
+      case dialogs.WELCOME:
+        $('#welcome-dialog').show();
+        break;
+      case dialogs.GENERATED:
+        $('#start-dialog').show();
+        $('#share-game-url').val(gameUrl);
+        window.history.replaceState(null, 'Str8ts', gameUrl);
     }
   } else {
     $('.dialogOuterContainer').hide();
@@ -344,9 +363,9 @@ $(document).ready(function(){
   if (code && code.length > 82) {
     gameUrl = window.location.href;
     gameCode = code;
-    dialogVisibility(true, false);
+    showDialog(dialogs.GENERATED);
   } else {
-    loadNewGame();
+    showDialog(dialogs.WELCOME);
   }
   $('td[id^="ce"]').click(function () { // Game fields
     const row = Number($(this).attr('row'));

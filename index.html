@@ -38,7 +38,7 @@
       <hr class="line">
       <table cellspacing="7px">
         <tr>
-          <td class="button set" id="new" onclick="loadNewGame()">Neu</td>
+          <td class="button set" id="new" onclick="loadNewGameAgain()">Neu</td>
           <td class="button set" id="empty" onclick="restart()">Leeren</td>
         </tr>
         <tr>
@@ -52,26 +52,30 @@
     <div class="dialogBackground"></div>
     <div class="dialogInnerContainer">
       <div class="dialog" id="welcome-dialog">
-        <div class="dialog-title">Neues Spiel</div>
-        <div class="dialog-text">Ein neues Spiel wurde geladen.</div>
+        <div class="dialog-title">Neues Str8ts-Spiel</div>
+        <div class="dialog-share">
+          Schwierigkeit:
+          <span id="difficulty" class="difficulty">Mittel</span>
+          <br>
+          <input type="range" min="1" max="5" value="3" id="difficultySlider" class="slider" autocomplete="off" oninput="changeDifficulty()">
+        </div>
+        <span class="start-game-button" onclick="loadNewGame()">Neu generieren</span>
+        <span class="start-game-button" id="cancelNewGame" onclick="cancelNewGame()" style="display: none;">Abbrechen</span>
+      </div>
+      <div class="dialog" id="start-dialog">
+        <div class="dialog-title">Neues Str8ts-Spiel</div>
+        <div class="dialog-text">Neues Spiel wurde generiert.</div>
         <div class="dialog-share">
           URL zum Teilen:
           <br>
           <input id="share-game-url" type="text" readonly="readonly" class="dialog-text-input" placeholder="Spiel URL">
           <span class="copy-button" onclick="copyGameURL()">Kopieren</span>
         </div>
-        <div class="dialog-share">
-          Schwierigkeit:
-          <span id="difficulty" class="difficulty">Mittel</span>
-          <br>
-          <input type="range" min="0" max="5" value="3" id="difficultySlider" class="slider" onchange="changeDifficulty()">
-        </div>
         <span class="start-game-button" onclick="startGame()">Spiel starten</span>
-        <span class="start-game-button" onclick="loadNewGame()">Neu generieren</span>
       </div>
-      <div class="dialog loadingDialog" id="loading">
+      <div class="dialog loading-dialog" id="loading-dialog">
         <div class="loading-ring"></div>
-        <div style="margin-top: 10px;">Neues Spiel wird generiert, bitte warten.</div>
+        <div style="margin-top: 10px;">Neues Spiel wird generiert,<br>bitte warten.</div>
       </div>
     </div>
   </div>
