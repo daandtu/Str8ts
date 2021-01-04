@@ -246,7 +246,7 @@ void generate(std::vector<Field> &game, int difficulty, int generatorCount, int 
 		int singleFieldsRow = 0;
 		for (int col = 0; col < 9; col++)
 		{
-			// To check if there are unanted clusters of black fields or lone white fields all eight fields around the current field are examined
+			// To check if there are unwanted clusters of black fields or lone white fields all eight fields around the current field are examined
 			int horizontalNeighbors = 0;
 			int verticalNeighbors = 0;
 			int secondOrderNeighbors = 0;
