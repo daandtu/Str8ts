@@ -1,6 +1,6 @@
 # Str8ts
 This repository contains the code for a generator and playing website for number puzzles called **[Str8ts](https://en.wikipedia.org/wiki/Str8ts)**.  
-Try it out on [luiswalter.me/str8ts/game](https://luiswalter.me/str8ts/game)!  
+Try it out on [luiswalter.dev/str8ts](https://luiswalter.dev/str8ts)!  
 The puzzle consists of a 9x9 grid of squares (similar to Sudoku). The objective is to fill all empty cells with suitable numbers between 1 and 9.  
 Although the basic principle is quite similar to Sudoku puzzles, the rules for filling out (and generating) a Str8ts grid is (technically) more complicated because of the random position of the black fields.
 ### The rules
